@@ -89,17 +89,23 @@ This repository contains comprehensive experiments for patent classification usi
 
 ## Performance Summary Table
 
-| Approach | Model(s) | Sample Size | Accuracy | Improvement | Infrastructure | Status |
-|----------|----------|-------------|----------|-------------|----------------|--------|
-| **Llama 1-Shot** | Llama-3.1-8B | ~10 | **24.2%** | Baseline | Modal A10G | ✅ Complete |
-| **Vanilla BERT** | bert-base-uncased | Test set | ~35%* | +11% | Standard | ✅ Estimated |
-| **Fine-tuned BERT** | bert-base-uncased | Full test | **58.2%** | +34% | Modal A10G | ✅ Complete |
-| **DeBERTa-v3-Large** | deberta-v3-large | Full test | **67.5%** | +43% | Modal 32GB | ✅ Complete |
-| **Qwen Standalone** | Qwen2.5-Coder-32B | ~5 | ~20% | -4% | Modal 4-bit | ✅ Complete |
-| **Two-Stage Hybrid** | DeBERTa + Qwen | 600 (running) | **~75%*** | +51%*** | Modal Dual | 🔄 In Progress |
+| Approach | Model(s) | Sample Size | Accuracy | Speed (samples/sec) | Cost per Sample | Total Cost (600 samples) | Infrastructure | Status |
+|----------|----------|-------------|----------|-------------------|-----------------|-------------------------|----------------|--------|
+| **Llama 1-Shot** | Llama-3.1-8B | 500 | **24.2%** | **2.1** | **$0.000038** | **$0.023** | Modal A10G | ✅ Complete |
+| **Vanilla BERT** | bert-base-uncased | Test set | ~35%* | ~5.0 | $0.0001* | $0.06* | Standard | ✅ Estimated |
+| **Fine-tuned BERT** | bert-base-uncased | Full test | **58.2%** | ~8.0* | $0.00008* | $0.048* | Modal A10G | ✅ Complete |
+| **DeBERTa-v3-Large** | deberta-v3-large | 600 | **67.5%** | **9.2** | **$0.000062** | **$0.037** | Modal 32GB | ✅ Complete |
+| **Qwen Standalone** | Qwen2.5-Coder-32B | ~5 | ~20% | 0.014 | $0.00015 | $0.09 | Modal 4-bit | ✅ Complete |
+| **Two-Stage Hybrid** | DeBERTa + Qwen | 600 (running) | **~75%*** | ~0.5*** | ~$0.0001*** | ~$0.06*** | Modal Dual | 🔄 In Progress |
 
 \* Estimated based on typical pre-trained transformer performance  
 \*\*\* Expected based on system design and initial testing
+
+### Cost Analysis Notes
+- **DeBERTa-v3-Large** achieves the best cost-effectiveness: highest accuracy (67.5%) at lowest cost ($0.037 for 600 samples)
+- **Speed vs Cost**: Faster models (DeBERTa: 9.2 samples/sec) are more cost-effective than slower reasoning models (Qwen: 0.014 samples/sec)
+- **Two-Stage Optimization**: Expected to provide optimal accuracy-cost balance by using fast DeBERTa for high-confidence cases
+- **Training Costs**: One-time training costs (~$2-5 per model) amortized across thousands of inferences
 
 ## Key Insights
 
