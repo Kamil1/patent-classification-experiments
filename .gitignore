@@ -1,4 +1,4 @@
-# Python
+# Python bytecode and build artifacts
 __pycache__/
 *.py[cod]
 *$py.class
@@ -51,14 +51,6 @@ Thumbs.db
 models/
 *.bin
 *.safetensors
-
-# Temporary files
-test_*.py
-debug_*.py
-
-# Logs and results (keep structure but not all files)
-results/*.json
-!results/README.md
 
 # Cache
 .cache/
