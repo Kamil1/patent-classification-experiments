@@ -8,6 +8,15 @@ This repository contains comprehensive experiments for patent classification usi
 - **Splits**: 25,000 training, 5,000 validation, 5,000 test samples
 - **Task**: Multi-class text classification of patent abstracts
 
+## 🤗 Trained Models
+
+We provide two fine-tuned models on HuggingFace Hub:
+
+- **[KamilHugsFaces/patent-bert-base](https://huggingface.co/KamilHugsFaces/patent-bert-base)**: BERT fine-tuned on patent data (58.2% accuracy)
+- **[KamilHugsFaces/patent-deberta-v3-large](https://huggingface.co/KamilHugsFaces/patent-deberta-v3-large)**: DeBERTa-v3-Large fine-tuned on patent data (**67.5% accuracy - recommended**)
+
+Both models are ready for inference and can classify patent abstracts into 9 categories.
+
 ## Approaches and Results
 
 ### 1. Llama 1-Shot Classification
@@ -30,7 +39,7 @@ This repository contains comprehensive experiments for patent classification usi
 
 ### 3. Fine-tuned BERT Classification
 **Approach**: BERT fine-tuned on patent classification dataset
-- **Model**: `bert-base-uncased` → fine-tuned version
+- **Model**: `bert-base-uncased` → [`KamilHugsFaces/patent-bert-base`](https://huggingface.co/KamilHugsFaces/patent-bert-base)
 - **Method**: Full fine-tuning on 25k training samples
 - **Training Parameters**:
   - Epochs: 3
@@ -44,7 +53,7 @@ This repository contains comprehensive experiments for patent classification usi
 
 ### 4. DeBERTa-v3-Large Classification
 **Approach**: State-of-the-art transformer fine-tuned for patents
-- **Model**: `microsoft/deberta-v3-large` → `KamilHugsFaces/patent-deberta-v3-large`
+- **Model**: `microsoft/deberta-v3-large` → [`KamilHugsFaces/patent-deberta-v3-large`](https://huggingface.co/KamilHugsFaces/patent-deberta-v3-large)
 - **Method**: Fine-tuning with advanced tokenization and architecture
 - **Training Parameters**:
   - Learning rate: 1e-5 (lower for stability)
@@ -93,8 +102,8 @@ This repository contains comprehensive experiments for patent classification usi
 |----------|----------|-------------|----------|-------------------|-----------------|-------------------------|----------------|--------|
 | **Llama 1-Shot** | Llama-3.1-8B | 500 | **24.2%** | **2.1** | **$0.000038** | **$0.023** | Modal A10G | ✅ Complete |
 | **Vanilla BERT** | bert-base-uncased | Test set | ~35%* | ~5.0 | $0.0001* | $0.06* | Standard | ✅ Estimated |
-| **Fine-tuned BERT** | bert-base-uncased | Full test | **58.2%** | ~8.0* | $0.00008* | $0.048* | Modal A10G | ✅ Complete |
-| **DeBERTa-v3-Large** | deberta-v3-large | 600 | **67.5%** | **9.2** | **$0.000062** | **$0.037** | Modal 32GB | ✅ Complete |
+| **Fine-tuned BERT** | [patent-bert-base](https://huggingface.co/KamilHugsFaces/patent-bert-base) | Full test | **58.2%** | ~8.0* | $0.00008* | $0.048* | Modal A10G | ✅ Complete |
+| **DeBERTa-v3-Large** | [patent-deberta-v3-large](https://huggingface.co/KamilHugsFaces/patent-deberta-v3-large) | 600 | **67.5%** | **9.2** | **$0.000062** | **$0.037** | Modal 32GB | ✅ Complete |
 | **Qwen Standalone** | Qwen2.5-Coder-32B | ~5 | ~20% | 0.014 | $0.00015 | $0.09 | Modal 4-bit | ✅ Complete |
 | **Two-Stage Hybrid** | DeBERTa + Qwen | 300 | **68.7%** | ~0.8 | ~$0.00009 | ~$0.054 | Modal Dual | ✅ Complete |
 
@@ -209,11 +218,24 @@ python main.py --mode classify --model_type generative --max_samples 500
 # 2. Fine-tuned BERT
 python main.py --mode classify --model KamilHugsFaces/patent-bert-base --max_samples 500
 
-# 3. DeBERTa-v3-Large  
+# 3. DeBERTa-v3-Large (best single model)
 python main.py --mode classify --model KamilHugsFaces/patent-deberta-v3-large --max_samples 500
 
-# 4. Two-stage system
-modal run two_stage_modal.py::main --max-samples 500 --confidence-threshold 0.75
+# 4. Two-stage system (DeBERTa + Qwen reasoning)
+modal run two_stage_modal.py::main --max-samples 300 --confidence-threshold 0.75
+```
+
+### Use Pre-trained Models Directly
+```python
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+
+# Load fine-tuned BERT
+tokenizer = AutoTokenizer.from_pretrained("KamilHugsFaces/patent-bert-base")
+model = AutoModelForSequenceClassification.from_pretrained("KamilHugsFaces/patent-bert-base")
+
+# Load fine-tuned DeBERTa (recommended)
+tokenizer = AutoTokenizer.from_pretrained("KamilHugsFaces/patent-deberta-v3-large")
+model = AutoModelForSequenceClassification.from_pretrained("KamilHugsFaces/patent-deberta-v3-large")
 ```
 
 ---
