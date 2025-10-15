@@ -188,18 +188,45 @@ Both models are ready for inference and can classify patent abstracts into 9 cat
 
 ## Files Structure
 ```
+├── README.md                        # This comprehensive guide
+├── requirements.txt                 # Python dependencies
+├── .gitignore                       # Git ignore patterns
+│
 ├── main.py                          # Core classification pipeline
-├── train.py                         # Local training script  
-├── train_modal.py                   # Modal-based training
-├── modal_inference_flexible.py      # Modal inference system
-├── two_stage_modal.py               # Two-stage Modal classifier ⭐
-├── run_two_stage.py                 # Local two-stage implementation
+├── config.py                        # Configuration settings
+├── data_loader.py                   # Dataset loading utilities
+├── evaluate.py                      # Evaluation and metrics
+│
+├── modal_inference_flexible.py      # Main Modal inference system
+├── modal_inference.py               # Alternative Modal implementation
 ├── modal_client_flexible.py         # Flexible Modal client
+├── modal_client.py                  # Basic Modal client
+├── pipeline_flexible.py             # Flexible pipeline utilities
+├── two_stage_modal.py               # Two-stage Modal classifier ⭐
+│
+├── train.py                         # Local training script
+├── train_modal.py                   # Modal-based training ⭐
+├── TRAINING_GUIDE.md                # Training documentation
+│
 ├── cost_tracker.py                  # Cost profiling utilities
+├── cost_comparison.py               # Multi-run cost analysis
+├── setup_modal.py                   # Modal setup automation
+│
+├── test_*.py                        # Test and debug files
+├── debug_modal.py                   # Modal debugging utilities
+│
+├── experimental/                    # Research and experimental code
+│   ├── analyze_existing_ensemble.py # Ensemble analysis
+│   ├── ensemble_reasoning.py        # Ensemble experiments
+│   └── run_two_stage.py             # Local two-stage implementation
+│
 ├── results/                         # Experiment results and logs
 │   ├── patent_classification_results_*.json
-│   └── patent_classification_costs_*.json
-└── README.md                        # This comprehensive guide
+│   ├── patent_classification_costs_*.json
+│   └── README.md                    # Results documentation
+│
+├── logs/                            # Development logs
+└── models/                          # Local model artifacts
 ```
 
 ## Reproducing Results
