@@ -78,12 +78,12 @@ This repository contains comprehensive experiments for patent classification usi
   - Low confidence (<0.75): Apply Qwen reasoning with detailed prompt
 - **Sample Sizes**: 
   - Proof of concept: 2 samples ✅
-  - Current evaluation: 600 samples (in progress)
+  - Full evaluation: 300 samples ✅
 - **Results**: 
+  - **Final accuracy: 68.7%** (206/300 correct)
+  - **Reasoning utilization: 34.7%** (104/300 samples)
+  - **Performance: +1.2% over DeBERTa alone**
   - **System working successfully** ✅
-  - 50% reasoning utilization rate observed
-  - Final accuracy: *Pending 600-sample completion*
-- **Expected**: **~75% accuracy** based on combining high-confidence DeBERTa with reasoning corrections
 - **Infrastructure**: Modal GPU loading both models simultaneously (32GB memory)
 - **Innovation**: First hybrid classification + reasoning system
 
@@ -96,15 +96,16 @@ This repository contains comprehensive experiments for patent classification usi
 | **Fine-tuned BERT** | bert-base-uncased | Full test | **58.2%** | ~8.0* | $0.00008* | $0.048* | Modal A10G | ✅ Complete |
 | **DeBERTa-v3-Large** | deberta-v3-large | 600 | **67.5%** | **9.2** | **$0.000062** | **$0.037** | Modal 32GB | ✅ Complete |
 | **Qwen Standalone** | Qwen2.5-Coder-32B | ~5 | ~20% | 0.014 | $0.00015 | $0.09 | Modal 4-bit | ✅ Complete |
-| **Two-Stage Hybrid** | DeBERTa + Qwen | 600 (running) | **~75%*** | ~0.5*** | ~$0.0001*** | ~$0.06*** | Modal Dual | 🔄 In Progress |
+| **Two-Stage Hybrid** | DeBERTa + Qwen | 300 | **68.7%** | ~0.8 | ~$0.00009 | ~$0.054 | Modal Dual | ✅ Complete |
 
 \* Estimated based on typical pre-trained transformer performance  
 \*\*\* Expected based on system design and initial testing
 
 ### Cost Analysis Notes
-- **DeBERTa-v3-Large** achieves the best cost-effectiveness: highest accuracy (67.5%) at lowest cost ($0.037 for 600 samples)
-- **Speed vs Cost**: Faster models (DeBERTa: 9.2 samples/sec) are more cost-effective than slower reasoning models (Qwen: 0.014 samples/sec)
-- **Two-Stage Optimization**: Expected to provide optimal accuracy-cost balance by using fast DeBERTa for high-confidence cases
+- **DeBERTa-v3-Large** achieves the best cost-effectiveness: highest single-model accuracy (67.5%) at lowest cost ($0.037 for 600 samples)
+- **Two-Stage Performance**: 68.7% accuracy with modest cost increase (+1.2% accuracy for +46% cost due to reasoning overhead)
+- **Speed vs Cost**: Faster models (DeBERTa: 9.2 samples/sec) are more cost-effective than hybrid approaches (Two-Stage: ~0.8 samples/sec)
+- **Diminishing Returns**: The +1.2% accuracy improvement may not justify 46% cost increase for many applications
 - **Training Costs**: One-time training costs (~$2-5 per model) amortized across thousands of inferences
 
 ## Key Insights
@@ -119,9 +120,9 @@ This repository contains comprehensive experiments for patent classification usi
 
 ### Performance Progression Timeline
 1. **Baseline Generative** (24.2%): Llama 1-shot classification
-2. **Fine-tuning Breakthrough** (58.2%): BERT training → +34% improvement
+2. **Fine-tuning Breakthrough** (58.2%): BERT training → +34% improvement  
 3. **Architecture Upgrade** (67.5%): DeBERTa-v3-Large → +9% additional
-4. **Hybrid Innovation** (~75%): Two-stage reasoning → +8% expected
+4. **Hybrid Innovation** (68.7%): Two-stage reasoning → +1.2% additional
 
 ### Technical Achievements ✅
 - **Modal GPU Training Pipeline**: Successful end-to-end fine-tuning
