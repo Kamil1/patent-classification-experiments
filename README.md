@@ -23,6 +23,7 @@ Both models are ready for inference and can classify patent abstracts into 9 cat
 **Approach**: Zero-shot/few-shot classification using Llama models
 - **Model**: `Llama-3.1-8B-Instruct` via Modal
 - **Method**: Direct generative classification with class descriptions
+  (why use such a small sample size? is it possible to confidently know this method has been exhausted accuracy wise on such a small sample?)
 - **Sample Size**: Small test samples (~5-10)
 - **Results**: **~24.2% accuracy** (baseline generative approach)
 - **Infrastructure**: Modal A10G GPU with 4-bit quantization
@@ -78,6 +79,7 @@ Both models are ready for inference and can classify patent abstracts into 9 cat
 - **Notes**: Good reasoning quality but inconsistent classification parsing
 - **Cost**: Higher due to 32B model size
 
+(what is the reasoning for using this qwen model for the lower confidence score samples, when it seems to perform more poorly compared to deberta standalone?)
 ### 6. Two-Stage Classification (DeBERTa + Qwen Reasoning)
 **Approach**: Hybrid system combining fast classification with reasoning
 - **Stage 1**: DeBERTa-v3-large for initial classification with confidence scores
@@ -97,6 +99,8 @@ Both models are ready for inference and can classify patent abstracts into 9 cat
 - **Innovation**: First hybrid classification + reasoning system
 
 ## Performance Summary Table
+
+(given completely different input samples, is it fair to compare the different accuracies of these models?)
 
 | Approach | Model(s) | Sample Size | Accuracy | Speed (samples/sec) | Cost per Sample | Total Cost (600 samples) | Infrastructure | Status |
 |----------|----------|-------------|----------|-------------------|-----------------|-------------------------|----------------|--------|

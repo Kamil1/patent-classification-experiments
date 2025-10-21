@@ -47,6 +47,7 @@ CLASS_LABELS = {
 
 @app.cls(
     image=image,
+    # nit: why use an A10G over a newer H100 or A100 (that would have higher throughput)
     gpu="A10G",            # Use A10G GPU for cost-effective inference
     memory=16384,          # 16GB memory
     timeout=3600,          # 1 hour timeout
@@ -108,6 +109,7 @@ class PatentClassifierModel:
             self.tokenizer.pad_token = self.tokenizer.eos_token
             
         # Load model with 4-bit quantization
+        # What's the reasoning for using AutoModelForCausalLM over vLLM or SGLang?
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
             quantization_config=quantization_config,
@@ -121,7 +123,11 @@ class PatentClassifierModel:
         
     def create_classification_prompt(self, patent_text: str) -> str:
         """Create optimized prompt for patent classification."""
-        
+
+        # Why not try adding some k shot examples?
+
+        # nit: could using tokenizer.apply_chat_template be easier than manipulating the chat template text
+        # ourselves??
         # Shortened class descriptions to reduce token usage
         classes_text = """0: Human Necessities (food, medicine, personal items)
 1: Operations/Transport (manufacturing, transport)
@@ -272,6 +278,7 @@ Class:<|eot_id|><|start_header_id|>assistant<|end_header_id|>
                 
         return None
 
+# Could things like this clutter the submitted code?
 # Create a web endpoint for testing (optional)
 @app.function(image=image)
 def classify_endpoint(item: Dict[str, str]):
