@@ -105,6 +105,9 @@ class FlexiblePatentClassifier:
             self.tokenizer.pad_token = self.tokenizer.eos_token
         
         # Configure quantization for memory efficiency
+        # 4bit vs 8bit seems like an easy knob to test before jumping into finetuning
+        # a BERT model. 4bit generally sees several percentage points accuracy drop compared
+        # to 8bit or full precision
         quantization_config = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_compute_dtype=torch.float16,
@@ -367,7 +370,8 @@ Class:<|eot_id|><|start_header_id|>assistant<|end_header_id|>
         correct_predictions = 0
         total_input_tokens = 0
         total_output_tokens = 0
-        
+
+        # Why not use `classify_single` here?
         for i, text in enumerate(patent_texts):
             if self.model_type == "generative":
                 result = self._classify_generative(text)
