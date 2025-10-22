@@ -5,7 +5,6 @@ import argparse
 import sys
 import os
 from config import Config
-from pipeline import PatentClassificationPipeline
 from pipeline_flexible import FlexiblePatentClassificationPipeline
 from evaluate import PatentClassificationEvaluator
 from data_loader import PatentDataLoader
