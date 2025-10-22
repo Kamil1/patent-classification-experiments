@@ -1,0 +1,74 @@
+{
+  "overall": {
+    "accuracy": 0.2202,
+    "weighted_precision": 0.10841766270978305,
+    "weighted_recall": 0.2202,
+    "weighted_f1": 0.08382102249442161,
+    "total_samples": 5000
+  },
+  "per_class": {
+    "0": {
+      "class_name": "Human Necessities",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 754
+    },
+    "1": {
+      "class_name": "Performing Operations; Transporting",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 649
+    },
+    "2": {
+      "class_name": "Chemistry; Metallurgy",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 394
+    },
+    "3": {
+      "class_name": "Textiles; Paper",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 44
+    },
+    "4": {
+      "class_name": "Fixed Constructions",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 156
+    },
+    "5": {
+      "class_name": "Mechanical Engineering; Lightning; Heating; Weapons; Blasting",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 358
+    },
+    "6": {
+      "class_name": "Physics",
+      "precision": 0.22349570200573066,
+      "recall": 0.986449864498645,
+      "f1_score": 0.3644251626898048,
+      "support": 1107
+    },
+    "7": {
+      "class_name": "Electricity",
+      "precision": 0.25,
+      "recall": 0.001932367149758454,
+      "f1_score": 0.003835091083413231,
+      "support": 1035
+    },
+    "8": {
+      "class_name": "General tagging of new or cross-sectional technology",
+      "precision": 0.07142857142857142,
+      "recall": 0.013916500994035786,
+      "f1_score": 0.02329450915141431,
+      "support": 503
+    }
+  }
+}

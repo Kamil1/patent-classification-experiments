@@ -23,50 +23,105 @@ Both models are ready for inference and can classify patent abstracts into 9 cat
 **Approach**: Zero-shot/few-shot classification using Llama models
 - **Model**: `Llama-3.1-8B-Instruct` via Modal
 - **Method**: Direct generative classification with class descriptions
-- **Sample Size**: Small test samples (~5-10)
-- **Results**: **~24.2% accuracy** (baseline generative approach)
+- **Sample Size**: Full test set (5,000 samples) ✅
+- **Results**: **24.6% accuracy** (baseline generative approach)
 - **Infrastructure**: Modal A10G GPU with 4-bit quantization
-- **Cost**: ~$0.0002/sample
-- **Notes**: Poor performance due to lack of domain-specific training
+- **Speed**: 2.73 samples/second (~30.5 minutes total)
+- **Cost**: $0.0001121/sample ($0.561 total for 5,000 samples)
+- **Commands**: 
+  ```bash
+  # Run classification
+  python main.py --mode classify --model_type generative --max_sequence_length 2048
+  
+  # Evaluate results
+  python main.py --mode evaluate --results_path results/patent_classification_results_test_20251021_201725.json
+  ```
+- **Modal Run**: [View execution logs](https://modal.com/apps/kamil1/main/ap-HVeVS44YcYHKUEjpSs0U8a?start=1761014845.271&end=1761101245.271&live=true&activeTab=logs)
+- **Notes**: Poor performance due to lack of domain-specific training, but consistent across large sample size
 
 ### 2. Vanilla BERT Classification  
 **Approach**: Pre-trained BERT without fine-tuning
-- **Model**: `bert-base-uncased`
+- **Model**: `google-bert/bert-base-uncased`
 - **Method**: Using BERT embeddings with classification head
-- **Sample Size**: Test samples
-- **Results**: **~30-40% accuracy*** (estimated based on typical pre-trained performance)
-- **Notes**: Limited effectiveness without domain adaptation
+- **Sample Size**: Full test set (5,000 samples) ✅
+- **Results**: **22.0% accuracy** (worse than generative baseline)
+- **Infrastructure**: Modal A10G GPU with 4-bit quantization
+- **Speed**: 36.67 samples/second (~2.3 minutes total)
+- **Cost**: $0.00000834/sample ($0.042 total for 5,000 samples)
+- **Commands**: 
+  ```bash
+  # Run classification
+  python main.py --mode classify --model google-bert/bert-base-uncased --model_type classification --max_sequence_length 512
+  
+  # Evaluate results
+  python main.py --mode evaluate --results_path results/patent_classification_results_test_20251021_204306.json --max_sequence_length 512
+  ```
+- **Modal Run**: [View execution logs](https://modal.com/apps/kamil1/main/ap-0gMWCecefKX2wT2NrD2a7g?start=1761018805.645&end=1761105205.645&live=true&activeTab=logs)
+- **Notes**: Poor performance due to lack of domain-specific training; heavily biased toward Physics class (98.6% recall)
 
 ### 3. Fine-tuned BERT Classification
 **Approach**: BERT fine-tuned on patent classification dataset
-- **Model**: `bert-base-uncased` → [`KamilHugsFaces/patent-bert-base`](https://huggingface.co/KamilHugsFaces/patent-bert-base)
+- **Model**: `bert-base-uncased` → [`KamilHugsFaces/patent-bert-classifier`](https://huggingface.co/KamilHugsFaces/patent-bert-classifier)
 - **Method**: Full fine-tuning on 25k training samples
-- **Training Parameters**:
-  - Epochs: 3
-  - Learning rate: 2e-5
-  - Batch size: 16
-- **Sample Size**: Full test set evaluation
-- **Results**: **58.2% accuracy** (significant improvement over vanilla)
-- **Infrastructure**: Modal GPU training (A10G)
-- **Training Time**: ~45 minutes
-- **Key Achievement**: First major breakthrough (+24% over generative baseline)
+- **Sample Size**: Full test set (5,000 samples) ✅
+- **Results**: **67.7% accuracy** (major improvement over vanilla BERT)
+- **Infrastructure**: Modal A10G GPU with 4-bit quantization
+- **Speed**: 34.61 samples/second (~2.4 minutes total)
+- **Cost**: $0.00000884/sample ($0.044 total for 5,000 samples)
+- **Commands**: 
+  ```bash
+  # Run classification
+  python main.py --mode classify --model KamilHugsFaces/patent-bert-classifier --model_type classification --max_sequence_length 512
+  
+  # Evaluate results
+  python main.py --mode evaluate --results_path results/patent_classification_results_test_20251021_205857.json --max_sequence_length 512
+  ```
+- **Modal Run**: [View execution logs](https://modal.com/apps/kamil1/main/ap-n8ZX23dukE6xeholskI6Ao?start=1761019000.442&end=1761105400.442&live=true&activeTab=logs)
+- **Key Achievement**: Massive breakthrough (+45.7% over vanilla BERT, +43.1% over generative baseline)
+
+### 3b. Fine-tuned BERT (Low Learning Rate)
+**Approach**: BERT fine-tuned with lower learning rate for potentially better convergence
+- **Model**: `bert-base-uncased` → [`KamilHugsFaces/patent-bert-v2-lowlr`](https://huggingface.co/KamilHugsFaces/patent-bert-v2-lowlr)
+- **Method**: Fine-tuning with reduced learning rate on 25k training samples
+- **Sample Size**: Full test set (5,000 samples) ✅
+- **Results**: **66.8% accuracy** (slightly lower than standard fine-tuning)
+- **Infrastructure**: Modal A10G GPU with 4-bit quantization
+- **Speed**: 41.13 samples/second (~2.0 minutes total)
+- **Cost**: $0.00000744/sample ($0.037 total for 5,000 samples)
+- **Commands**: 
+  ```bash
+  # Run classification
+  python main.py --mode classify --model KamilHugsFaces/patent-bert-v2-lowlr --model_type classification --max_sequence_length 512
+  
+  # Evaluate results
+  python main.py --mode evaluate --results_path results/patent_classification_results_test_20251021_210303.json --max_sequence_length 512
+  ```
+- **Modal Run**: [View execution logs](https://modal.com/apps/kamil1/main/ap-8SgzTraAJPqYc4XCYjrINk?start=1761019303.812&end=1761105703.812&live=true&activeTab=logs)
+- **Notes**: Lower learning rate training was slightly faster and cheaper but achieved marginally lower accuracy (-0.9% vs standard)
 
 ### 4. DeBERTa-v3-Large Classification
 **Approach**: State-of-the-art transformer fine-tuned for patents
 - **Model**: `microsoft/deberta-v3-large` → [`KamilHugsFaces/patent-deberta-v3-large`](https://huggingface.co/KamilHugsFaces/patent-deberta-v3-large)
 - **Method**: Fine-tuning with advanced tokenization and architecture
-- **Training Parameters**:
-  - Learning rate: 1e-5 (lower for stability)
-  - Advanced tokenization with DeBERTaV2Tokenizer
-  - Specialized sentencepiece handling
-- **Sample Size**: Full evaluation sets
-- **Results**: **67.5% accuracy** (best single-model performance)
+- **Sample Size**: Full test set (5,000 samples) ✅
+- **Results**: **69.3% accuracy** (best single-model performance)
+- **Infrastructure**: Modal A10G GPU with 4-bit quantization
+- **Speed**: 12.17 samples/second (~6.8 minutes total)
+- **Cost**: $0.0000251/sample ($0.126 total for 5,000 samples)
+- **Commands**: 
+  ```bash
+  # Run classification
+  python main.py --mode classify --model KamilHugsFaces/patent-deberta-v3-large --model_type classification --max_sequence_length 512
+  
+  # Evaluate results
+  python main.py --mode evaluate --results_path results/patent_classification_results_test_20251021_211228.json --max_sequence_length 512
+  ```
+- **Modal Run**: [View execution logs](https://modal.com/apps/kamil1/main/ap-zLjFUMKSdhSmUfBfjzj3Mt?start=1761019566.109&end=1761105966.109&live=true&activeTab=logs)
 - **Features**: 
-  - Confidence scores for each prediction
-  - Full probability distributions
-  - Specialized tokenization for patent text
-- **Infrastructure**: Modal GPU with 32GB memory
-- **Key Achievement**: +9% improvement over BERT
+  - Advanced DeBERTa-v3 architecture with improved tokenization
+  - Full probability distributions for confidence scoring
+  - Best balance of accuracy and inference cost
+- **Key Achievement**: +1.6% improvement over standard fine-tuned BERT, +47.3% over vanilla BERT
 
 ### 5. Qwen Standalone Classification
 **Approach**: Pure generative classification using advanced reasoning
@@ -100,10 +155,11 @@ Both models are ready for inference and can classify patent abstracts into 9 cat
 
 | Approach | Model(s) | Sample Size | Accuracy | Speed (samples/sec) | Cost per Sample | Total Cost (600 samples) | Infrastructure | Status |
 |----------|----------|-------------|----------|-------------------|-----------------|-------------------------|----------------|--------|
-| **Llama 1-Shot** | Llama-3.1-8B | 500 | **24.2%** | **2.1** | **$0.000038** | **$0.023** | Modal A10G | ✅ Complete |
-| **Vanilla BERT** | bert-base-uncased | Test set | ~35%* | ~5.0 | $0.0001* | $0.06* | Standard | ✅ Estimated |
-| **Fine-tuned BERT** | [patent-bert-base](https://huggingface.co/KamilHugsFaces/patent-bert-base) | Full test | **58.2%** | ~8.0* | $0.00008* | $0.048* | Modal A10G | ✅ Complete |
-| **DeBERTa-v3-Large** | [patent-deberta-v3-large](https://huggingface.co/KamilHugsFaces/patent-deberta-v3-large) | 600 | **67.5%** | **9.2** | **$0.000062** | **$0.037** | Modal 32GB | ✅ Complete |
+| **Llama 1-Shot** | Llama-3.1-8B | 5,000 | **24.6%** | **2.73** | **$0.0001121** | **$0.561** | Modal A10G | ✅ Complete |
+| **Vanilla BERT** | google-bert/bert-base-uncased | 5,000 | **22.0%** | **36.67** | **$0.00000834** | **$0.042** | Modal A10G | ✅ Complete |
+| **Fine-tuned BERT** | [patent-bert-classifier](https://huggingface.co/KamilHugsFaces/patent-bert-classifier) | 5,000 | **67.7%** | **34.61** | **$0.00000884** | **$0.044** | Modal A10G | ✅ Complete |
+| **Fine-tuned BERT (Low LR)** | [patent-bert-v2-lowlr](https://huggingface.co/KamilHugsFaces/patent-bert-v2-lowlr) | 5,000 | **66.8%** | **41.13** | **$0.00000744** | **$0.037** | Modal A10G | ✅ Complete |
+| **DeBERTa-v3-Large** | [patent-deberta-v3-large](https://huggingface.co/KamilHugsFaces/patent-deberta-v3-large) | 5,000 | **69.3%** | **12.17** | **$0.0000251** | **$0.126** | Modal A10G | ✅ Complete |
 | **Qwen Standalone** | Qwen2.5-Coder-32B | ~5 | ~20% | 0.014 | $0.00015 | $0.09 | Modal 4-bit | ✅ Complete |
 | **Two-Stage Hybrid** | DeBERTa + Qwen | 300 | **68.7%** | ~0.8 | ~$0.00009 | ~$0.054 | Modal Dual | ✅ Complete |
 
@@ -111,10 +167,11 @@ Both models are ready for inference and can classify patent abstracts into 9 cat
 \*\*\* Expected based on system design and initial testing
 
 ### Cost Analysis Notes
-- **DeBERTa-v3-Large** achieves the best cost-effectiveness: highest single-model accuracy (67.5%) at lowest cost ($0.037 for 600 samples)
-- **Two-Stage Performance**: 68.7% accuracy with modest cost increase (+1.2% accuracy for +46% cost due to reasoning overhead)
-- **Speed vs Cost**: Faster models (DeBERTa: 9.2 samples/sec) are more cost-effective than hybrid approaches (Two-Stage: ~0.8 samples/sec)
-- **Diminishing Returns**: The +1.2% accuracy improvement may not justify 46% cost increase for many applications
+- **Vanilla BERT** is the most cost-effective for speed: $0.042 total cost, but poor accuracy (22.0%)
+- **Speed dramatically affects cost**: Vanilla BERT (36.67 samples/sec) costs 13x less than Llama (2.73 samples/sec) 
+- **Modal pricing is time-based**: $0.000306/second for A10G GPU, regardless of model size or tokens
+- **Accuracy vs Cost tradeoff**: Higher accuracy models (DeBERTa: 67.5%) cost more due to longer processing time
+- **Fine-tuned models** balance speed and accuracy better than generative approaches
 - **Training Costs**: One-time training costs (~$2-5 per model) amortized across thousands of inferences
 
 ## Key Insights
@@ -128,10 +185,12 @@ Both models are ready for inference and can classify patent abstracts into 9 cat
 **⚠️ Important**: Results need normalization on same sample sizes for fair comparison
 
 ### Performance Progression Timeline
-1. **Baseline Generative** (24.2%): Llama 1-shot classification
-2. **Fine-tuning Breakthrough** (58.2%): BERT training → +34% improvement  
-3. **Architecture Upgrade** (67.5%): DeBERTa-v3-Large → +9% additional
-4. **Hybrid Innovation** (68.7%): Two-stage reasoning → +1.2% additional
+1. **Baseline Generative** (24.6%): Llama 1-shot classification on full test set
+2. **Vanilla BERT Baseline** (22.0%): Pre-trained BERT → -2.6% (worse than generative)
+3. **Fine-tuning Breakthrough** (67.7%): BERT standard training → +45.7% improvement over vanilla BERT
+4. **Fine-tuning Variation** (66.8%): BERT low learning rate → -0.9% vs standard (faster but slightly worse)
+5. **Architecture Upgrade** (69.3%): DeBERTa-v3-Large → **+1.6% best single-model performance**
+6. **Hybrid Innovation** (68.7%): Two-stage reasoning → -0.6% vs DeBERTa (but adds explainability)
 
 ### Technical Achievements ✅
 - **Modal GPU Training Pipeline**: Successful end-to-end fine-tuning
@@ -239,16 +298,19 @@ modal token new
 
 ### Run Complete Evaluation Suite
 ```bash
-# 1. Llama baseline
-python main.py --mode classify --model_type generative --max_samples 500
+# 1. Llama baseline (full test set)
+python main.py --mode classify --model_type generative --max_sequence_length 2048
 
-# 2. Fine-tuned BERT
+# 2. Vanilla BERT (pre-trained, no fine-tuning)
+python main.py --mode classify --model google-bert/bert-base-uncased --model_type classification --max_sequence_length 512
+
+# 3. Fine-tuned BERT
 python main.py --mode classify --model KamilHugsFaces/patent-bert-base --max_samples 500
 
-# 3. DeBERTa-v3-Large (best single model)
+# 4. DeBERTa-v3-Large (best single model)
 python main.py --mode classify --model KamilHugsFaces/patent-deberta-v3-large --max_samples 500
 
-# 4. Two-stage system (DeBERTa + Qwen reasoning)
+# 5. Two-stage system (DeBERTa + Qwen reasoning)
 modal run two_stage_modal.py::main --max-samples 300 --confidence-threshold 0.75
 ```
 

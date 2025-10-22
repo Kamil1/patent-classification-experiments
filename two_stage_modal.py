@@ -50,8 +50,8 @@ CLASS_LABELS = {
 
 @app.cls(
     image=image,
-    gpu="A10G", 
-    memory=32768,  # 32GB for both models
+    gpu="A100-40GB", 
+    memory=65536,  # 64GB for both models
     timeout=3600,
     secrets=[modal.Secret.from_name("huggingface-secret")],
 )
@@ -89,10 +89,10 @@ class TwoStagePatentClassifier:
         )
         print("✅ DeBERTa loaded successfully")
         
-        print("📥 Loading Qwen2.5-Coder for reasoning...")
+        print("📥 Loading Qwen3-30B-A3B-Thinking for reasoning...")
         
         # Load Qwen model and tokenizer  
-        qwen_model_name = "Qwen/Qwen2.5-Coder-32B-Instruct"
+        qwen_model_name = "Qwen/Qwen3-30B-A3B-Thinking-2507"
         self.qwen_tokenizer = AutoTokenizer.from_pretrained(
             qwen_model_name,
             trust_remote_code=True,

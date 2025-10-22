@@ -80,22 +80,19 @@ class CostTracker:
         self._sample_input_tokens = []
         self._sample_output_tokens = []
         
-        # Cost configuration (approximate pricing)
-        self.cost_config = {
-            # GPU compute costs (per hour, approximate)
-            "gpu_costs": {
-                "T4": 0.35,      # Google Colab Pro
-                "V100": 2.48,    # AWS p3.2xlarge
-                "A100": 3.06,    # AWS p4d.xlarge
-                "RTX_3080": 0.50, # Estimated local cost
-                "RTX_4090": 0.80, # Estimated local cost
-                "default": 1.0    # Default fallback
-            },
-            # Token costs (per 1M tokens, approximate for hosted inference)
-            "token_costs": {
-                "llama-8b": {"input": 0.15, "output": 0.60},  # Rough estimate
-                "default": {"input": 0.50, "output": 2.00}    # Conservative estimate
-            }
+        # Modal GPU pricing (per second, from Modal pricing page)
+        self.modal_gpu_costs = {
+            "A10G": 0.000306,    # Modal A10G GPU
+            "A10": 0.000306,     # Modal A10
+            "L4": 0.000222,      # Modal L4
+            "T4": 0.000164,      # Modal T4
+            "L40S": 0.000542,    # Modal L40S
+            "A100-40": 0.000583, # Modal A100 40GB
+            "A100-80": 0.000694, # Modal A100 80GB
+            "H100": 0.001097,    # Modal H100
+            "H200": 0.001261,    # Modal H200
+            "B200": 0.001736,    # Modal B200
+            "default": 0.000306  # Default to A10G pricing
         }
     
     @contextmanager
@@ -204,24 +201,18 @@ class CostTracker:
         self._estimate_costs()
     
     def _estimate_costs(self):
-        """Estimate total costs based on usage."""
-        # GPU compute cost (if using GPU)
-        if self.track_gpu and self.metrics.total_runtime > 0:
-            gpu_type = self._detect_gpu_type()
-            gpu_cost_per_hour = self.cost_config["gpu_costs"].get(gpu_type, self.cost_config["gpu_costs"]["default"])
-            runtime_hours = self.metrics.total_runtime / 3600
-            self.metrics.estimated_compute_cost_usd = gpu_cost_per_hour * runtime_hours
+        """Estimate total costs based on Modal's time-based GPU pricing."""
+        # Modal compute cost (time-based, not token-based)
+        if self.metrics.total_runtime > 0:
+            # Assume A10G GPU for Modal runs (most common)
+            gpu_cost_per_second = self.modal_gpu_costs.get("A10G", self.modal_gpu_costs["default"])
+            self.metrics.estimated_compute_cost_usd = self.metrics.total_runtime * gpu_cost_per_second
         
-        # Token cost (for hosted inference)
-        model_key = "llama-8b" if "llama" in self.model_name.lower() else "default"
-        token_costs = self.cost_config["token_costs"].get(model_key, self.cost_config["token_costs"]["default"])
+        # Modal doesn't charge for tokens, only compute time
+        self.metrics.estimated_token_cost_usd = 0.0
         
-        input_cost = (self.metrics.total_input_tokens / 1_000_000) * token_costs["input"]
-        output_cost = (self.metrics.total_output_tokens / 1_000_000) * token_costs["output"]
-        self.metrics.estimated_token_cost_usd = input_cost + output_cost
-        
-        # Total cost
-        self.metrics.total_estimated_cost_usd = self.metrics.estimated_compute_cost_usd + self.metrics.estimated_token_cost_usd
+        # Total cost is just compute cost
+        self.metrics.total_estimated_cost_usd = self.metrics.estimated_compute_cost_usd
         
         # Cost per sample
         if self.metrics.samples_processed > 0:

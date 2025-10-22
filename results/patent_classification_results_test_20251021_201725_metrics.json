@@ -1,0 +1,74 @@
+{
+  "overall": {
+    "accuracy": 0.24644074593944254,
+    "weighted_precision": 0.4998430701588045,
+    "weighted_recall": 0.24644074593944254,
+    "weighted_f1": 0.23512127324614804,
+    "total_samples": 4987
+  },
+  "per_class": {
+    "0": {
+      "class_name": "Human Necessities",
+      "precision": 0.5670103092783505,
+      "recall": 0.44058744993324434,
+      "f1_score": 0.49586776859504134,
+      "support": 749
+    },
+    "1": {
+      "class_name": "Performing Operations; Transporting",
+      "precision": 0.8333333333333334,
+      "recall": 0.0077279752704791345,
+      "f1_score": 0.015313935681470138,
+      "support": 647
+    },
+    "2": {
+      "class_name": "Chemistry; Metallurgy",
+      "precision": 0.5612903225806452,
+      "recall": 0.22193877551020408,
+      "f1_score": 0.3180987202925046,
+      "support": 392
+    },
+    "3": {
+      "class_name": "Textiles; Paper",
+      "precision": 0.09574468085106383,
+      "recall": 0.4090909090909091,
+      "f1_score": 0.15517241379310345,
+      "support": 44
+    },
+    "4": {
+      "class_name": "Fixed Constructions",
+      "precision": 0.5454545454545454,
+      "recall": 0.038461538461538464,
+      "f1_score": 0.0718562874251497,
+      "support": 156
+    },
+    "5": {
+      "class_name": "Mechanical Engineering; Lightning; Heating; Weapons; Blasting",
+      "precision": 0.2602965403624382,
+      "recall": 0.441340782122905,
+      "f1_score": 0.32746113989637304,
+      "support": 358
+    },
+    "6": {
+      "class_name": "Physics",
+      "precision": 0.5434782608695652,
+      "recall": 0.02262443438914027,
+      "f1_score": 0.043440486533449174,
+      "support": 1105
+    },
+    "7": {
+      "class_name": "Electricity",
+      "precision": 0.46215139442231074,
+      "recall": 0.3365570599613153,
+      "f1_score": 0.38947957470621153,
+      "support": 1034
+    },
+    "8": {
+      "class_name": "General tagging of new or cross-sectional technology",
+      "precision": 0.09549071618037135,
+      "recall": 0.50199203187251,
+      "f1_score": 0.16045845272206305,
+      "support": 502
+    }
+  }
+}

@@ -3,7 +3,6 @@
 class Config:
     # Model configuration
     MODEL_NAME = "meta-llama/Llama-3.1-8B-Instruct"
-    MAX_LENGTH = 2048
     TEMPERATURE = 0.1
     TOP_P = 0.9
     

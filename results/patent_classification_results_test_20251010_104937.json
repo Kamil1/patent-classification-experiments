@@ -1,0 +1,82 @@
+{
+  "summary": {
+    "split": "test",
+    "total_samples": 3,
+    "valid_predictions": 2,
+    "correct_predictions": 0,
+    "accuracy": 0.0,
+    "prediction_rate": 0.6666666666666666,
+    "timestamp": "2025-10-10T10:49:37.967693",
+    "config": {
+      "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+      "max_length": 2048,
+      "temperature": 0.1,
+      "top_p": 0.9
+    },
+    "cost_metrics": {
+      "total_runtime": 65.50744819641113,
+      "model_loading_time": 15.006368160247803,
+      "inference_time": 48.72616124153137,
+      "preprocessing_time": 0.0,
+      "total_input_tokens": 1138,
+      "total_output_tokens": 14,
+      "avg_input_tokens": 379.3333333333333,
+      "avg_output_tokens": 4.666666666666667,
+      "peak_cpu_percent": 100.0,
+      "avg_cpu_percent": 76.46666666666665,
+      "peak_memory_mb": 6155.15625,
+      "avg_memory_mb": 4835.035037878788,
+      "peak_gpu_memory_mb": 0.0,
+      "avg_gpu_memory_mb": 0.0,
+      "estimated_compute_cost_usd": 0.0,
+      "estimated_token_cost_usd": 0.00017909999999999996,
+      "total_estimated_cost_usd": 0.00017909999999999996,
+      "samples_processed": 3,
+      "samples_per_second": 0.045796319084283256,
+      "cost_per_sample_usd": 5.969999999999999e-05,
+      "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+      "batch_size": 4,
+      "max_length": 2048,
+      "quantization": "none",
+      "timestamp": "2025-10-10T10:48:31.694325"
+    }
+  },
+  "detailed_results": [
+    {
+      "sample_id": 0,
+      "true_label": 8,
+      "true_label_name": "General tagging of new or cross-sectional technology",
+      "predicted_label": null,
+      "predicted_label_name": "Unknown",
+      "raw_response": "Based on the patent abstract, I would classify this",
+      "text_preview": "radiation - sensitive organo - halogen compounds having a photo - labile halomethyl - 1 , 3 , 5 - triazine moiety and at least one sensitizer moiety within one molecule . the compounds of this inventi...",
+      "is_correct": false,
+      "input_tokens": 323,
+      "output_tokens": 10
+    },
+    {
+      "sample_id": 1,
+      "true_label": 1,
+      "true_label_name": "Performing Operations; Transporting",
+      "predicted_label": 2,
+      "predicted_label_name": "Chemistry; Metallurgy",
+      "raw_response": "2",
+      "text_preview": "a process of dewatering primary - treated sewage which includes mixing the sewage with a coagulant or flocculant aid , usually activated polymer . the sewage is then mixed and flocculated at condition...",
+      "is_correct": false,
+      "input_tokens": 417,
+      "output_tokens": 2
+    },
+    {
+      "sample_id": 2,
+      "true_label": 6,
+      "true_label_name": "Physics",
+      "predicted_label": 5,
+      "predicted_label_name": "Mechanical Engineering; Lightning; Heating; Weapons; Blasting",
+      "raw_response": "5",
+      "text_preview": "an alarm system for a building has a plurality of audible alarm generating units disposed at various locations throughout the building . each of the units is within audible range of at least one of th...",
+      "is_correct": false,
+      "input_tokens": 398,
+      "output_tokens": 2
+    }
+  ]
+}

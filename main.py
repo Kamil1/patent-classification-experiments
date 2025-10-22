@@ -32,6 +32,8 @@ def main():
                        help='Model name to use for classification (e.g., meta-llama/Llama-3.1-8B-Instruct)')
     parser.add_argument('--model_type', type=str, choices=['auto', 'generative', 'classification'], 
                        default='auto', help='Model type: auto (detect), generative (Llama/GPT), or classification (BERT/RoBERTa)')
+    parser.add_argument('--max_sequence_length', type=int, default=None,
+                       help='Maximum sequence length for tokenization (512 for BERT, 2048 for Llama) - required for classify mode')
     
     args = parser.parse_args()
     
@@ -64,6 +66,7 @@ def main():
         print(f"Model type: {args.model_type}")
         print(f"Split: {args.split}")
         print(f"Max samples: {args.max_samples or 'all'}")
+        print(f"Max sequence length: {args.max_sequence_length}")
         print(f"Batch size: {config.BATCH_SIZE}")
         print(f"Cost tracking: {'disabled' if args.disable_cost_tracking else 'enabled'}")
         if args.note:
@@ -73,6 +76,7 @@ def main():
         try:
             # Use flexible pipeline that supports different model types
             pipeline = FlexiblePatentClassificationPipeline(
+                args.max_sequence_length,
                 config, 
                 enable_cost_tracking=not args.disable_cost_tracking,
                 model_type=args.model_type

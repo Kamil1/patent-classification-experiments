@@ -18,10 +18,11 @@ logger = logging.getLogger(__name__)
 class FlexiblePatentClassificationPipeline:
     """Flexible pipeline for patent classification supporting different model types."""
     
-    def __init__(self, config: Config = Config(), enable_cost_tracking: bool = True, 
-                 model_type: str = "auto"):
+    def __init__(self, max_sequence_length: int, config: Config = Config(), 
+                 enable_cost_tracking: bool = True, model_type: str = "auto"):
         self.config = config
         self.model_type = model_type
+        self.max_sequence_length = max_sequence_length
         self.data_loader = PatentDataLoader(config)
         
         # Initialize cost tracking
@@ -30,6 +31,7 @@ class FlexiblePatentClassificationPipeline:
         # Use flexible Modal client
         try:
             self.classifier = FlexibleModalPatentClassifier(
+                self.max_sequence_length,
                 config, 
                 cost_tracker=self.cost_tracker, 
                 model_type=model_type
@@ -161,7 +163,7 @@ class FlexiblePatentClassificationPipeline:
                 'method': results[0].get('method', 'unknown') if results else 'none',
                 'config': {
                     'model_name': self.config.MODEL_NAME,
-                    'max_length': self.config.MAX_LENGTH,
+                    'max_sequence_length': self.max_sequence_length,
                     'temperature': self.config.TEMPERATURE,
                     'top_p': self.config.TOP_P
                 },

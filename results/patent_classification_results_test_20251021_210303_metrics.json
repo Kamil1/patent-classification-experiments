@@ -1,0 +1,74 @@
+{
+  "overall": {
+    "accuracy": 0.6678,
+    "weighted_precision": 0.6427787081777734,
+    "weighted_recall": 0.6678,
+    "weighted_f1": 0.6439083979769464,
+    "total_samples": 5000
+  },
+  "per_class": {
+    "0": {
+      "class_name": "Human Necessities",
+      "precision": 0.7416149068322981,
+      "recall": 0.7917771883289124,
+      "f1_score": 0.7658755612572161,
+      "support": 754
+    },
+    "1": {
+      "class_name": "Performing Operations; Transporting",
+      "precision": 0.5873452544704264,
+      "recall": 0.6579352850539292,
+      "f1_score": 0.6206395348837209,
+      "support": 649
+    },
+    "2": {
+      "class_name": "Chemistry; Metallurgy",
+      "precision": 0.5610561056105611,
+      "recall": 0.8629441624365483,
+      "f1_score": 0.68,
+      "support": 394
+    },
+    "3": {
+      "class_name": "Textiles; Paper",
+      "precision": 0.7272727272727273,
+      "recall": 0.36363636363636365,
+      "f1_score": 0.48484848484848486,
+      "support": 44
+    },
+    "4": {
+      "class_name": "Fixed Constructions",
+      "precision": 0.7461538461538462,
+      "recall": 0.6217948717948718,
+      "f1_score": 0.6783216783216783,
+      "support": 156
+    },
+    "5": {
+      "class_name": "Mechanical Engineering; Lightning; Heating; Weapons; Blasting",
+      "precision": 0.6030927835051546,
+      "recall": 0.6536312849162011,
+      "f1_score": 0.6273458445040214,
+      "support": 358
+    },
+    "6": {
+      "class_name": "Physics",
+      "precision": 0.7362428842504743,
+      "recall": 0.7009936766034327,
+      "f1_score": 0.7181860249884313,
+      "support": 1107
+    },
+    "7": {
+      "class_name": "Electricity",
+      "precision": 0.7086206896551724,
+      "recall": 0.7942028985507247,
+      "f1_score": 0.7489749430523918,
+      "support": 1035
+    },
+    "8": {
+      "class_name": "General tagging of new or cross-sectional technology",
+      "precision": 0.2777777777777778,
+      "recall": 0.05964214711729622,
+      "f1_score": 0.09819967266775777,
+      "support": 503
+    }
+  }
+}

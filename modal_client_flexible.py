@@ -12,11 +12,12 @@ logger = logging.getLogger(__name__)
 class FlexibleModalPatentClassifier:
     """Flexible client for Modal-based patent classification supporting different model types."""
     
-    def __init__(self, config: Config = Config(), cost_tracker: Optional[CostTracker] = None, 
-                 model_type: str = "auto"):
+    def __init__(self, max_sequence_length: int, config: Config = Config(), 
+                 cost_tracker: Optional[CostTracker] = None, model_type: str = "auto"):
         self.config = config
         self.cost_tracker = cost_tracker
         self.model_type = model_type
+        self.max_sequence_length = max_sequence_length
         self.classifier_instance = None
         
     def _detect_model_type(self, model_name: str) -> str:
@@ -51,7 +52,7 @@ class FlexibleModalPatentClassifier:
             # Create an instance with config parameters
             self.classifier_instance = FlexiblePatentClassifier(
                 model_name=self.config.MODEL_NAME,
-                max_length=self.config.MAX_LENGTH,
+                max_length=self.max_sequence_length,
                 model_type=self.model_type
             )
             
@@ -61,7 +62,7 @@ class FlexibleModalPatentClassifier:
             if self.cost_tracker:
                 self.cost_tracker.update_config_info(
                     batch_size=self.config.BATCH_SIZE,
-                    max_length=self.config.MAX_LENGTH,
+                    max_length=self.max_sequence_length,
                     quantization=f"4bit-modal-{self.model_type}"
                 )
                 
